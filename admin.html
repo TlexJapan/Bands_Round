@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAND ROUND 管理ページ</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#10151d;color:#f2f5fa;font-family:system-ui,sans-serif}
+header{padding:20px;background:#182231;border-bottom:1px solid #303d50}
+header h1{margin:0;font-size:23px}
+header p{margin:5px 0 0;color:#aab6c7;font-size:13px}
+main{max-width:850px;margin:auto;padding:16px}
+nav{display:flex;gap:8px;overflow-x:auto;padding:5px 0 15px}
+nav button{white-space:nowrap;background:#202d3e;color:#dce6f3;border:0;padding:11px 15px;border-radius:9px}
+nav button.active{background:#3978d5;color:white}
+.panel{background:#192332;border:1px solid #2b394c;border-radius:13px;padding:16px;margin-bottom:15px}
+h2{font-size:18px;margin:0 0 14px}
+input,textarea,select{width:100%;padding:12px;margin:6px 0 12px;background:#101923;color:white;border:1px solid #40516a;border-radius:8px;font:inherit}
+textarea{min-height:90px;resize:vertical}
+label{font-size:13px;color:#b9c6d8}
+button{cursor:pointer;font:inherit}
+.action{border:0;border-radius:8px;padding:11px 15px;background:#3978d5;color:white}
+.secondary{background:#34445a}
+.danger{background:#a83e48}
+.entry{background:#111b28;border:1px solid #34445a;border-radius:9px;padding:13px;margin-top:10px}
+.entry h3{margin:0 0 6px;font-size:16px}
+.entry p{color:#b9c6d8;white-space:pre-wrap;overflow-wrap:anywhere}
+.entry small{color:#8fa2ba}
+.entry button{margin:4px 5px 0 0}
+.hidden{display:none}
+.note{font-size:12px;color:#9eafc5;line-height:1.7}
+#status{color:#83d9a5;font-size:13px;margin-top:10px}
+footer{text-align:center;color:#718198;font-size:12px;padding:25px}
+</style>
+</head>
+<body>
+<header>
+<h1>BAND ROUND</h1>
+<p>管理者専用ページ</p>
+</header>
+
+<main>
+<div class="panel">
+<h2>データ管理</h2>
+<p class="note">登録したデータは、このブラウザに自動保存されます。JSONファイルに書き出してバックアップできます。</p>
+<button class="action" onclick="exportData()">JSONを書き出す</button>
+<button class="action secondary" onclick="document.getElementById('importFile').click()">JSONを読み込む</button>
+<input id="importFile" type="file" accept=".json,application/json" hidden onchange="importData(event)">
+<p id="status"></p>
+</div>
+
+<nav id="tabs"></nav>
+
+<section class="panel">
+<h2 id="formTitle">新しく登録</h2>
+<form id="entryForm">
+<label>タイトル</label>
+<input id="title" required placeholder="タイトルを入力">
+
+<label>日付</label>
+<input id="date" type="date">
+
+<label id="extraLabel">分類・楽器など</label>
+<input id="extra" placeholder="例：テナーサックス">
+
+<label>内容・説明</label>
+<textarea id="description" placeholder="内容を入力"></textarea>
+
+<label>ファイル・関連ページのURL</label>
+<input id="url" type="url" placeholder="https://...">
+
+<button class="action" type="submit" id="saveButton">登録する</button>
+<button class="action secondary hidden" type="button" id="cancelButton" onclick="cancelEdit()">編集をやめる</button>
+</form>
+</section>
+
+<section class="panel">
+<h2 id="listTitle">登録済みデータ</h2>
+<div id="entries"></div>
+</section>
+</main>
+
+<footer>BAND ROUND ADMIN</footer>
+
+<script>
+const categories = [
+ {id:"blog",name:"ブログ",extra:"カテゴリー"},
+ {id:"music",name:"楽譜・音源",extra:"楽器・種類"},
+ {id:"competition",name:"大会情報",extra:"会場・大会名"},
+ {id:"news",name:"お知らせ",extra:"分類"},
+ {id:"updates",name:"更新履歴",extra:"更新内容"}
+];
+
+let data = loadData();
+let current = "blog";
+let editingId = null;
+
+function emptyData(){
+ return {blog:[],music:[],competition:[],news:[],updates:[]};
+}
+
+function loadData(){
+ try{
+  const saved=localStorage.getItem("bandround_admin_data");
+  return saved ? {...emptyData(),...JSON.parse(saved)} : emptyData();
+ }catch(e){
+  return emptyData();
+ }
+}
+
+function saveData(){
+ localStorage.setItem("bandround_admin_data",JSON.stringify(data));
+ showStatus("保存しました");
+ render();
+}
+
+function showStatus(message){
+ document.getElementById("status").textContent=message;
+}
+
+function renderTabs(){
+ const tabs=document.getElementById("tabs");
+ tabs.innerHTML="";
+ categories.forEach(c=>{
+  const b=document.createElement("button");
+  b.textContent=c.name;
+  b.className=current===c.id?"active":"";
+  b.onclick=()=>{
+   current=c.id;
+   cancelEdit();
+   render();
+  };
+  tabs.appendChild(b);
+ });
+}
+
+function render(){
+ renderTabs();
+ const category=categories.find(c=>c.id===current);
+ document.getElementById("listTitle").textContent=category.name+"の登録一覧";
+ document.getElementById("extraLabel").textContent=category.extra;
+ const list=document.getElementById("entries");
+ list.innerHTML="";
+
+ const items=data[current]||[];
+ if(items.length===0){
+  list.textContent="まだ登録されていません。";
+  return;
+ }
+
+ items.forEach(item=>{
+  const div=document.createElement("div");
+  div.className="entry";
+
+  const h=document.createElement("h3");
+  h.textContent=item.title;
+  div.appendChild(h);
+
+  const small=document.createElement("small");
+  small.textContent=(item.date||"日付なし")+" ｜ "+(item.extra||"");
+  div.appendChild(small);
+
+  const p=document.createElement("p");
+  p.textContent=item.description||"説明なし";
+  div.appendChild(p);
+
+  if(item.url){
+   const link=document.createElement("p");
+   link.textContent="URL："+item.url;
+   div.appendChild(link);
+  }
+
+  const edit=document.createElement("button");
+  edit.className="action secondary";
+  edit.textContent="編集";
+  edit.onclick=()=>startEdit(item.id);
+  div.appendChild(edit);
+
+  const del=document.createElement("button");
+  del.className="action danger";
+  del.textContent="削除";
+  del.onclick=()=>deleteItem(item.id);
+  div.appendChild(del);
+
+  list.appendChild(div);
+ });
+}
+
+document.getElementById("entryForm").addEventListener("submit",e=>{
+ e.preventDefault();
+
+ const item={
+  id:editingId||("item_"+Date.now()+"_"+Math.random().toString(36).slice(2,7)),
+  title:document.getElementById("title").value.trim(),
+  date:document.getElementById("date").value,
+  extra:document.getElementById("extra").value.trim(),
+  description:document.getElementById("description").value.trim(),
+  url:document.getElementById("url").value.trim()
+ };
+
+ if(!item.title)return;
+
+ if(editingId){
+  data[current]=data[current].map(x=>x.id===editingId?item:x);
+ }else{
+  data[current].unshift(item);
+ }
+
+ cancelEdit();
+ saveData();
+});
+
+function startEdit(id){
+ const item=data[current].find(x=>x.id===id);
+ if(!item)return;
+
+ editingId=id;
+ document.getElementById("title").value=item.title;
+ document.getElementById("date").value=item.date||"";
+ document.getElementById("extra").value=item.extra||"";
+ document.getElementById("description").value=item.description||"";
+ document.getElementById("url").value=item.url||"";
+ document.getElementById("formTitle").textContent="内容を編集";
+ document.getElementById("saveButton").textContent="変更を保存";
+ document.getElementById("cancelButton").classList.remove("hidden");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function cancelEdit(){
+ editingId=null;
+ document.getElementById("entryForm").reset();
+ document.getElementById("formTitle").textContent="新しく登録";
+ document.getElementById("saveButton").textContent="登録する";
+ document.getElementById("cancelButton").classList.add("hidden");
+}
+
+function deleteItem(id){
+ if(!confirm("このデータを削除しますか？"))return;
+ data[current]=data[current].filter(x=>x.id!==id);
+ if(editingId===id)cancelEdit();
+ saveData();
+}
+
+function exportData(){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="bandround-data.json";
+ a.click();
+ URL.revokeObjectURL(url);
+ showStatus("JSONを書き出しました");
+}
+
+function importData(event){
+ const file=event.target.files[0];
+ if(!file)return;
+
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const imported=JSON.parse(reader.result);
+   const valid=categories.every(c=>Array.isArray(imported[c.id]));
+   if(!valid)throw new Error("形式が違います");
+   if(!confirm("現在のデータを読み込んだデータに置き換えますか？"))return;
+   data=Object.fromEntries(categories.map(c=>[c.id,imported[c.id]]));
+   saveData();
+   showStatus("JSONを読み込みました");
+  }catch(e){
+   alert("読み込めませんでした。正しいBAND ROUNDのJSONか確認してください。");
+  }
+  event.target.value="";
+ };
+ reader.readAsText(file);
+}
+
+render();
+</script>
+</body>
+</html>
