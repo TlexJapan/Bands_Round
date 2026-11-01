@@ -7,66 +7,37 @@
 <title>吹奏楽便利ツール | BAND ROUND</title>
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;background:#0b1020;color:#f4f3fa;
-  font-family:system-ui,sans-serif;
-}
-header{
-  padding:18px 6%;background:#121a30;
-  border-bottom:1px solid #303b59;
-  display:flex;justify-content:space-between;
-  align-items:center;flex-wrap:wrap;gap:12px;
-}
+body{margin:0;background:#0b1020;color:#f4f3fa;font-family:system-ui,sans-serif}
+header{padding:18px 6%;background:#121a30;border-bottom:1px solid #303b59;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .logo{font-size:22px;font-weight:900;color:#ff9bc5;text-decoration:none}
-nav{display:flex;gap:16px}
+nav{display:flex;gap:16px;flex-wrap:wrap}
 nav a{color:#d9dced;text-decoration:none;font-size:14px}
-.hero{
-  padding:40px 20px;text-align:center;
-  background:linear-gradient(135deg,#20264b,#39234c,#171d38);
-}
+.hero{padding:40px 20px;text-align:center;background:linear-gradient(135deg,#20264b,#39234c,#171d38)}
 .hero h1{margin:0;font-size:35px}
 .hero p{color:#ffafd0}
 main{max-width:850px;margin:auto;padding:25px 16px 60px}
-.panel{
-  background:#171f36;border:1px solid #303b59;
-  border-radius:17px;padding:22px;margin-bottom:20px;
-}
+.panel{background:#171f36;border:1px solid #303b59;border-radius:17px;padding:22px;margin-bottom:20px}
 h2{margin-top:0;border-left:4px solid #ff8fbd;padding-left:12px}
-button{
-  background:#e879ad;color:#171020;border:0;
-  border-radius:10px;padding:12px 20px;
-  font-weight:bold;font-size:15px;cursor:pointer;
+button,select{
+  background:#e879ad;color:#171020;border:0;border-radius:10px;
+  padding:12px 18px;font-weight:bold;font-size:15px;cursor:pointer
 }
 button.secondary{background:#303d5c;color:white}
+select{background:#10182c;color:white;border:1px solid #465475}
 button:disabled{opacity:.5}
-.display{
-  text-align:center;padding:20px 5px;
-  background:#10182c;border-radius:14px;margin:15px 0;
-}
+.display{text-align:center;padding:20px 5px;background:#10182c;border-radius:14px;margin:15px 0}
 .note{font-size:58px;font-weight:900;color:#ff9bc5}
 .frequency{font-size:21px;color:#dce3f5}
 .cents{font-size:15px;color:#b9c5df;margin-top:8px}
-.meter{
-  height:12px;background:#303d5c;border-radius:20px;
-  margin:25px 0 12px;position:relative;overflow:hidden;
-}
-.meter-center{
-  position:absolute;left:50%;top:0;height:100%;
-  width:2px;background:white;
-}
-.needle{
-  position:absolute;left:50%;top:-3px;
-  height:18px;width:5px;background:#ff9bc5;
-  border-radius:5px;transform:translateX(-50%);
-}
+.meter{height:12px;background:#303d5c;border-radius:20px;margin:25px 0 12px;position:relative;overflow:hidden}
+.meter-center{position:absolute;left:50%;top:0;height:100%;width:2px;background:white}
+.needle{position:absolute;left:50%;top:-3px;height:18px;width:5px;background:#ff9bc5;border-radius:5px;transform:translateX(-50%)}
 .status{text-align:center;color:#aeb8d0;font-size:13px}
 input[type=range]{width:100%;accent-color:#ff9bc5}
-input[type=number]{
-  background:#10182c;color:white;border:1px solid #465475;
-  border-radius:8px;padding:10px;font-size:18px;width:100px;
-}
+input[type=number]{background:#10182c;color:white;border:1px solid #465475;border-radius:8px;padding:10px;font-size:18px;width:100px}
 .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .big{font-size:35px;font-weight:bold;color:#ff9bc5}
+.setting{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0}
 footer{text-align:center;color:#8994ad;padding:25px;font-size:12px}
 </style>
 </head>
@@ -92,19 +63,16 @@ footer{text-align:center;color:#8994ad;padding:25px;font-size:12px}
 <div class="panel">
   <h2>🎤 クロマチックチューナー</h2>
   <p class="status">スマホのマイクで音を測定します。</p>
-
   <div class="display">
     <div class="note" id="note">--</div>
     <div class="frequency" id="frequency">--- Hz</div>
     <div class="cents" id="cents">音を鳴らしてください</div>
   </div>
-
   <div class="meter">
     <div class="meter-center"></div>
     <div class="needle" id="needle"></div>
   </div>
   <div class="status">低い ←　0　→ 高い</div>
-
   <div class="controls" style="justify-content:center;margin-top:20px">
     <button id="startTuner">チューナー開始</button>
     <button class="secondary" id="stopTuner">停止</button>
@@ -112,19 +80,30 @@ footer{text-align:center;color:#8994ad;padding:25px;font-size:12px}
   <p class="status" id="micStatus">開始するとマイクの使用許可を求めます。</p>
 </div>
 
-<!-- 基準音 -->
+<!-- B♭基準音 -->
 <div class="panel">
-  <h2>🎹 基準音</h2>
-  <p>吹奏楽のチューニング用基準音です。</p>
+  <h2>🎹 B♭ 基準音</h2>
+  <p>基準音を選んだオクターブで鳴らします。</p>
+
+  <div class="setting">
+    <label for="octave">オクターブ：</label>
+    <select id="octave">
+      <option value="2">B♭2</option>
+      <option value="3">B♭3</option>
+      <option value="4" selected>B♭4</option>
+      <option value="5">B♭5</option>
+    </select>
+  </div>
+
   <div class="display">
-    <div class="big">A4</div>
-    <div class="frequency">442 Hz</div>
+    <div class="big" id="referenceNote">B♭4</div>
+    <div class="frequency" id="referenceHz">468.3 Hz</div>
   </div>
   <div class="controls">
-    <button id="playA">A4を鳴らす</button>
-    <button class="secondary" id="stopA">停止</button>
+    <button id="playReference">B♭を鳴らす</button>
+    <button class="secondary" id="stopReference">停止</button>
   </div>
-  <p class="status">基準音：442Hz</p>
+  <p class="status">音律：平均律 ／ A4＝442Hz</p>
 </div>
 
 <!-- メトロノーム -->
@@ -132,43 +111,52 @@ footer{text-align:center;color:#8994ad;padding:25px;font-size:12px}
   <h2>⏱ メトロノーム</h2>
   <div class="display">
     <div class="big" id="bpmDisplay">120 BPM</div>
-    <div id="beatDisplay" class="frequency">● ○ ○ ○</div>
+    <div class="frequency" id="beatDisplay">● ○ ○ ○</div>
+    <p class="status" id="measureDisplay">4/4拍子</p>
   </div>
 
-  <label for="bpm">テンポ</label>
-  <input type="range" id="bpm" min="40" max="240" value="120">
-  <div class="controls">
+  <div class="setting">
+    <label for="signature">拍子：</label>
+    <select id="signature">
+      <option value="4">4/4</option>
+      <option value="3">3/4</option>
+      <option value="6">6/8</option>
+    </select>
+  </div>
+
+  <div class="setting">
+    <label for="bpm">テンポ：</label>
+    <input type="range" id="bpm" min="40" max="240" value="120">
     <input type="number" id="bpmNumber" min="40" max="240" value="120">
     <span>BPM</span>
   </div>
 
-  <div style="margin-top:20px" class="controls">
+  <div class="controls" style="margin-top:20px">
     <button id="startMetro">スタート</button>
     <button class="secondary" id="stopMetro">ストップ</button>
   </div>
+  <p class="status" id="metroInfo">4/4：1小節4クリック</p>
 </div>
 
 </main>
-
 <footer>© BAND ROUND</footer>
 
 <script>
 // チューナー
-let audioContext, analyser, micStream, tunerFrame;
+let audioContext,analyser,micStream,tunerFrame;
 let tunerRunning=false;
 
-const noteNames=["C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"];
+const noteNames=["C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"];
 
 function autoCorrelate(buffer,sampleRate){
-  let size=buffer.length;
+  const size=buffer.length;
   let rms=0;
-  for(let i=0;i<size;i++) rms+=buffer[i]*buffer[i];
+  for(let i=0;i<size;i++)rms+=buffer[i]*buffer[i];
   rms=Math.sqrt(rms/size);
   if(rms<0.012)return -1;
 
-  let bestOffset=-1,bestCorrelation=0;
-  let lastCorrelation=1;
-  let correlations=new Array(size).fill(0);
+  let bestOffset=-1,bestCorrelation=0,lastCorrelation=1;
+  const correlations=new Array(size).fill(0);
 
   for(let offset=40;offset<size/2;offset++){
     let correlation=0;
@@ -177,8 +165,7 @@ function autoCorrelate(buffer,sampleRate){
     }
     correlation=1-correlation/(size/2);
     correlations[offset]=correlation;
-
-    if(correlation>0.9 && correlation>lastCorrelation){
+    if(correlation>0.9&&correlation>lastCorrelation){
       bestCorrelation=correlation;
       bestOffset=offset;
     }
@@ -186,14 +173,13 @@ function autoCorrelate(buffer,sampleRate){
   }
 
   if(bestOffset===-1)return -1;
-
   let shift=0;
-  if(bestOffset>1 && bestOffset<size-1){
-    const left=correlations[bestOffset-1];
-    const center=correlations[bestOffset];
-    const right=correlations[bestOffset+1];
-    const denominator=2*(2*center-left-right);
-    if(denominator!==0)shift=(right-left)/denominator;
+  if(bestOffset>1&&bestOffset<size-1){
+    const l=correlations[bestOffset-1];
+    const c=correlations[bestOffset];
+    const r=correlations[bestOffset+1];
+    const d=2*(2*c-l-r);
+    if(d!==0)shift=(r-l)/d;
   }
   return sampleRate/(bestOffset+shift);
 }
@@ -204,7 +190,7 @@ function updateTuner(){
   analyser.getFloatTimeDomainData(buffer);
   const hz=autoCorrelate(buffer,audioContext.sampleRate);
 
-  if(hz>40 && hz<1500){
+  if(hz>40&&hz<1500){
     const midi=Math.round(69+12*Math.log2(hz/442));
     const target=442*Math.pow(2,(midi-69)/12);
     const cent=Math.round(1200*Math.log2(hz/target));
@@ -215,9 +201,8 @@ function updateTuner(){
     document.getElementById("frequency").textContent=hz.toFixed(1)+" Hz";
     document.getElementById("cents").textContent=
       cent===0?"ぴったり！":(cent>0?"+":"")+cent+" cent";
-
-    const position=Math.max(-50,Math.min(50,cent));
-    document.getElementById("needle").style.left=(50+position)+"%";
+    document.getElementById("needle").style.left=
+      (50+Math.max(-50,Math.min(50,cent)))+"%";
   }
   tunerFrame=requestAnimationFrame(updateTuner);
 }
@@ -225,7 +210,7 @@ function updateTuner(){
 document.getElementById("startTuner").onclick=async()=>{
   try{
     if(tunerRunning)return;
-    audioContext=new (window.AudioContext||window.webkitAudioContext)();
+    audioContext=new(window.AudioContext||window.webkitAudioContext)();
     await audioContext.resume();
     micStream=await navigator.mediaDevices.getUserMedia({audio:true});
     const source=audioContext.createMediaStreamSource(micStream);
@@ -244,7 +229,7 @@ document.getElementById("startTuner").onclick=async()=>{
 document.getElementById("stopTuner").onclick=()=>{
   tunerRunning=false;
   cancelAnimationFrame(tunerFrame);
-  if(micStream)micStream.getTracks().forEach(track=>track.stop());
+  if(micStream)micStream.getTracks().forEach(t=>t.stop());
   if(audioContext)audioContext.close();
   document.getElementById("micStatus").textContent="停止中";
   document.getElementById("note").textContent="--";
@@ -253,35 +238,52 @@ document.getElementById("stopTuner").onclick=()=>{
   document.getElementById("needle").style.left="50%";
 };
 
-// 基準音
-let toneContext,toneOscillator;
-document.getElementById("playA").onclick=async()=>{
-  if(toneOscillator)return;
-  toneContext=new (window.AudioContext||window.webkitAudioContext)();
-  await toneContext.resume();
-  toneOscillator=toneContext.createOscillator();
-  const gain=toneContext.createGain();
-  toneOscillator.type="sine";
-  toneOscillator.frequency.value=442;
-  gain.gain.value=0.12;
-  toneOscillator.connect(gain);
-  gain.connect(toneContext.destination);
-  toneOscillator.start();
+// B♭基準音
+let referenceContext=null,referenceOscillator=null;
+
+function updateReference(){
+  const octave=Number(document.getElementById("octave").value);
+  const midi=58+(octave-2)*12;
+  const hz=442*Math.pow(2,(midi-69)/12);
+  document.getElementById("referenceNote").textContent="B♭"+octave;
+  document.getElementById("referenceHz").textContent=hz.toFixed(1)+" Hz";
+  return hz;
+}
+document.getElementById("octave").onchange=()=>{
+  const hz=updateReference();
+  if(referenceOscillator)referenceOscillator.frequency.setTargetAtTime(
+    hz,referenceContext.currentTime,0.03
+  );
 };
-document.getElementById("stopA").onclick=()=>{
-  if(toneOscillator){
-    toneOscillator.stop();
-    toneOscillator=null;
-    toneContext.close();
+
+document.getElementById("playReference").onclick=async()=>{
+  if(referenceOscillator)return;
+  referenceContext=new(window.AudioContext||window.webkitAudioContext)();
+  await referenceContext.resume();
+  referenceOscillator=referenceContext.createOscillator();
+  const gain=referenceContext.createGain();
+  referenceOscillator.type="sine";
+  referenceOscillator.frequency.value=updateReference();
+  gain.gain.value=0.12;
+  referenceOscillator.connect(gain);
+  gain.connect(referenceContext.destination);
+  referenceOscillator.start();
+};
+document.getElementById("stopReference").onclick=()=>{
+  if(referenceOscillator){
+    referenceOscillator.stop();
+    referenceOscillator=null;
+    referenceContext.close();
+    referenceContext=null;
   }
 };
 
 // メトロノーム
-let metroTimer=null,metroBeat=0;
-let metroContext=null;
+let metroTimer=null,metroBeat=0,metroContext=null;
 const bpm=document.getElementById("bpm");
 const bpmNumber=document.getElementById("bpmNumber");
 const bpmDisplay=document.getElementById("bpmDisplay");
+const signature=document.getElementById("signature");
 
 function setBpm(value){
   value=Math.max(40,Math.min(240,Number(value)||120));
@@ -292,10 +294,36 @@ function setBpm(value){
 bpm.oninput=()=>setBpm(bpm.value);
 bpmNumber.onchange=()=>setBpm(bpmNumber.value);
 
+function beatCount(){
+  return Number(signature.value);
+}
+function updateMetroInfo(){
+  const count=beatCount();
+  document.getElementById("measureDisplay").textContent=
+    count===6?"6/8拍子":count+"/4拍子";
+  document.getElementById("metroInfo").textContent=
+    count===6
+    ?"6/8：1小節6クリック。1拍目と4拍目を強調"
+    :"1小節"+count+"クリック。1拍目を強調";
+  document.getElementById("beatDisplay").textContent=
+    Array.from({length:count},(_,i)=>i===0?"●":"○").join(" ");
+}
+signature.onchange=()=>{
+  metroBeat=0;
+  updateMetroInfo();
+  if(metroTimer){
+    clearInterval(metroTimer);
+    metroTimer=null;
+    startMetro();
+  }
+};
+
 function tick(){
+  const count=beatCount();
+  const strong=metroBeat===0||(count===6&&metroBeat===3);
   const osc=metroContext.createOscillator();
   const gain=metroContext.createGain();
-  osc.frequency.value=metroBeat===0?1100:750;
+  osc.frequency.value=strong?1100:750;
   gain.gain.setValueAtTime(0.2,metroContext.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001,metroContext.currentTime+0.08);
   osc.connect(gain);
@@ -303,26 +331,31 @@ function tick(){
   osc.start();
   osc.stop(metroContext.currentTime+0.09);
 
-  const dots=["○","○","○","○"];
-  dots[metroBeat]="●";
+  const dots=Array.from({length:count},(_,i)=>i===metroBeat?"●":"○");
   document.getElementById("beatDisplay").textContent=dots.join(" ");
-  metroBeat=(metroBeat+1)%4;
+  metroBeat=(metroBeat+1)%count;
 }
-document.getElementById("startMetro").onclick=async()=>{
+
+async function startMetro(){
   if(metroTimer)return;
-  metroContext=new (window.AudioContext||window.webkitAudioContext)();
+  metroContext=new(window.AudioContext||window.webkitAudioContext)();
   await metroContext.resume();
   metroBeat=0;
   tick();
   metroTimer=setInterval(tick,60000/Number(bpm.value));
-};
+}
+document.getElementById("startMetro").onclick=startMetro;
 document.getElementById("stopMetro").onclick=()=>{
   clearInterval(metroTimer);
   metroTimer=null;
   if(metroContext)metroContext.close();
   metroContext=null;
-  document.getElementById("beatDisplay").textContent="● ○ ○ ○";
+  metroBeat=0;
+  updateMetroInfo();
 };
+
+updateReference();
+updateMetroInfo();
 </script>
 </body>
 </html>
