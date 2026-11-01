@@ -155,7 +155,7 @@ function autoCorrelate(buffer,sampleRate){
   rms=Math.sqrt(rms/size);
   if(rms<0.012)return -1;
 
-  let bestOffset=-1,bestCorrelation=0,lastCorrelation=1;
+  let bestOffset=-1,lastCorrelation=1;
   const correlations=new Array(size).fill(0);
 
   for(let offset=40;offset<size/2;offset++){
@@ -166,7 +166,6 @@ function autoCorrelate(buffer,sampleRate){
     correlation=1-correlation/(size/2);
     correlations[offset]=correlation;
     if(correlation>0.9&&correlation>lastCorrelation){
-      bestCorrelation=correlation;
       bestOffset=offset;
     }
     lastCorrelation=correlation;
@@ -231,6 +230,8 @@ document.getElementById("stopTuner").onclick=()=>{
   cancelAnimationFrame(tunerFrame);
   if(micStream)micStream.getTracks().forEach(t=>t.stop());
   if(audioContext)audioContext.close();
+  audioContext=null;
+  micStream=null;
   document.getElementById("micStatus").textContent="停止中";
   document.getElementById("note").textContent="--";
   document.getElementById("frequency").textContent="--- Hz";
@@ -249,11 +250,14 @@ function updateReference(){
   document.getElementById("referenceHz").textContent=hz.toFixed(1)+" Hz";
   return hz;
 }
+
 document.getElementById("octave").onchange=()=>{
   const hz=updateReference();
-  if(referenceOscillator)referenceOscillator.frequency.setTargetAtTime(
-    hz,referenceContext.currentTime,0.03
-  );
+  if(referenceOscillator){
+    referenceOscillator.frequency.setTargetAtTime(
+      hz,referenceContext.currentTime,0.03
+    );
+  }
 };
 
 document.getElementById("playReference").onclick=async()=>{
@@ -269,6 +273,7 @@ document.getElementById("playReference").onclick=async()=>{
   gain.connect(referenceContext.destination);
   referenceOscillator.start();
 };
+
 document.getElementById("stopReference").onclick=()=>{
   if(referenceOscillator){
     referenceOscillator.stop();
@@ -280,6 +285,7 @@ document.getElementById("stopReference").onclick=()=>{
 
 // メトロノーム
 let metroTimer=null,metroBeat=0,metroContext=null;
+
 const bpm=document.getElementById("bpm");
 const bpmNumber=document.getElementById("bpmNumber");
 const bpmDisplay=document.getElementById("bpmDisplay");
@@ -291,12 +297,28 @@ function setBpm(value){
   bpmNumber.value=value;
   bpmDisplay.textContent=value+" BPM";
 }
-bpm.oninput=()=>setBpm(bpm.value);
-bpmNumber.onchange=()=>setBpm(bpmNumber.value);
+
+// 再生中のテンポ変更を即時反映
+function restartMetroTimer(){
+  if(!metroTimer)return;
+  clearInterval(metroTimer);
+  metroTimer=setInterval(tick,60000/Number(bpm.value));
+}
+
+bpm.oninput=()=>{
+  setBpm(bpm.value);
+  restartMetroTimer();
+};
+
+bpmNumber.onchange=()=>{
+  setBpm(bpmNumber.value);
+  restartMetroTimer();
+};
 
 function beatCount(){
   return Number(signature.value);
 }
+
 function updateMetroInfo(){
   const count=beatCount();
   document.getElementById("measureDisplay").textContent=
@@ -308,48 +330,71 @@ function updateMetroInfo(){
   document.getElementById("beatDisplay").textContent=
     Array.from({length:count},(_,i)=>i===0?"●":"○").join(" ");
 }
+
 signature.onchange=()=>{
   metroBeat=0;
   updateMetroInfo();
+
   if(metroTimer){
     clearInterval(metroTimer);
-    metroTimer=null;
-    startMetro();
+    tick();
+    metroTimer=setInterval(tick,60000/Number(bpm.value));
   }
 };
 
 function tick(){
   const count=beatCount();
   const strong=metroBeat===0||(count===6&&metroBeat===3);
+
   const osc=metroContext.createOscillator();
   const gain=metroContext.createGain();
+
   osc.frequency.value=strong?1100:750;
   gain.gain.setValueAtTime(0.2,metroContext.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001,metroContext.currentTime+0.08);
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,metroContext.currentTime+0.08
+  );
+
   osc.connect(gain);
   gain.connect(metroContext.destination);
   osc.start();
   osc.stop(metroContext.currentTime+0.09);
 
-  const dots=Array.from({length:count},(_,i)=>i===metroBeat?"●":"○");
+  const dots=Array.from(
+    {length:count},
+    (_,i)=>i===metroBeat?"●":"○"
+  );
   document.getElementById("beatDisplay").textContent=dots.join(" ");
+
   metroBeat=(metroBeat+1)%count;
 }
 
 async function startMetro(){
   if(metroTimer)return;
-  metroContext=new(window.AudioContext||window.webkitAudioContext)();
+
+  if(!metroContext){
+    metroContext=new(window.AudioContext||window.webkitAudioContext)();
+  }
+
   await metroContext.resume();
   metroBeat=0;
   tick();
   metroTimer=setInterval(tick,60000/Number(bpm.value));
 }
+
 document.getElementById("startMetro").onclick=startMetro;
+
 document.getElementById("stopMetro").onclick=()=>{
-  clearInterval(metroTimer);
-  metroTimer=null;
-  if(metroContext)metroContext.close();
-  metroContext=null;
+  if(metroTimer){
+    clearInterval(metroTimer);
+    metroTimer=null;
+  }
+
+  if(metroContext){
+    metroContext.close();
+    metroContext=null;
+  }
+
   metroBeat=0;
   updateMetroInfo();
 };
