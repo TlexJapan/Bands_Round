@@ -4,99 +4,256 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>楽譜・音源 | BAND ROUND</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b0d18;color:#fff;font-family:system-ui,sans-serif}
-header{padding:18px 22px;background:#101426;border-bottom:1px solid #ffffff20}
-.logo{font-size:22px;font-weight:900;letter-spacing:2px}
+
+body{
+  margin:0;
+  background:#0b0d18;
+  color:#fff;
+  font-family:system-ui,sans-serif;
+}
+
+header{
+  padding:18px 22px;
+  background:#101426;
+  border-bottom:1px solid #ffffff20;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
 .logo span{color:#e99acb}
-main{max-width:950px;margin:auto;padding:25px 18px}
-a{color:#e99acb;text-decoration:none}
-.back{display:inline-block;margin-bottom:28px}
-h1{font-size:32px;margin-bottom:5px}
-.sub{color:#c49abb;font-size:12px;letter-spacing:3px}
-.intro{color:#aaa;font-size:14px;margin:20px 0 30px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+
+main{
+  max-width:950px;
+  margin:auto;
+  padding:25px 18px;
+}
+
+a{
+  color:#e99acb;
+  text-decoration:none;
+}
+
+.back{
+  display:inline-block;
+  margin-bottom:28px;
+}
+
+h1{
+  font-size:32px;
+  margin-bottom:5px;
+}
+
+.sub{
+  color:#c49abb;
+  font-size:12px;
+  letter-spacing:3px;
+}
+
+.intro{
+  color:#aaa;
+  font-size:14px;
+  margin:20px 0 30px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:16px;
+}
+
 .instrument{
   background:linear-gradient(145deg,#20243e,#141728);
-  border:1px solid #ffffff20;border-radius:15px;
-  padding:23px;color:white;text-align:center;
-  cursor:pointer;transition:.2s
+  border:1px solid #ffffff20;
+  border-radius:15px;
+  padding:23px;
+  color:white;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
 }
-.instrument:hover,.instrument.active{border-color:#e99acb;background:#29213d}
+
+.instrument:hover,
+.instrument.active{
+  border-color:#e99acb;
+  background:#29213d;
+}
+
 .instrument .icon{font-size:38px}
-.instrument h2{font-size:19px;margin:12px 0 5px}
-.instrument p{font-size:12px;color:#aaa}
-#detail{margin-top:30px;padding:22px;background:#171b2d;border-radius:15px;border:1px solid #ffffff20}
-#detail h2{margin-top:0}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
-.tabs button{
- background:#282c43;color:#fff;border:1px solid #ffffff20;
- padding:10px 16px;border-radius:8px;cursor:pointer
+
+.instrument h2{
+  font-size:19px;
+  margin:12px 0 5px;
 }
-.tabs button.active{background:#a64c91;border-color:#e99acb}
-.filelist{color:#aaa;padding:18px;background:#101426;border-radius:10px}
-footer{text-align:center;padding:35px;color:#888;font-size:12px}
+
+.instrument p{
+  font-size:12px;
+  color:#aaa;
+}
+
+#detail{
+  margin-top:30px;
+  padding:22px;
+  background:#171b2d;
+  border-radius:15px;
+  border:1px solid #ffffff20;
+}
+
+#detail h2{margin-top:0}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:20px 0;
+}
+
+.tabs button{
+  background:#282c43;
+  color:#fff;
+  border:1px solid #ffffff20;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.tabs button.active{
+  background:#a64c91;
+  border-color:#e99acb;
+}
+
+.filelist{
+  color:#aaa;
+  padding:18px;
+  background:#101426;
+  border-radius:10px;
+}
+
+footer{
+  text-align:center;
+  padding:35px;
+  color:#888;
+  font-size:12px;
+}
 </style>
 </head>
+
 <body>
-<header><div class="logo">BAND <span>ROUND</span></div></header>
+
+<header>
+  <div class="logo">BAND <span>ROUND</span></div>
+</header>
 
 <main>
+
 <a class="back" href="index.html">← ホームに戻る</a>
+
 <h1>楽譜・音源</h1>
 <div class="sub">SHEET MUSIC & AUDIO</div>
-<p class="intro">楽器を選択して、楽譜や練習音源を確認できます。</p>
+
+<p class="intro">
+楽器を選択して、楽譜や練習音源を確認できます。
+</p>
 
 <div class="grid">
-  <button class="instrument" onclick="selectInstrument('ソプラノサックス',this)">
-    <div class="icon">🎷</div><h2>ソプラノサックス</h2><p>Soprano Saxophone</p>
+
+  <button class="instrument"
+    onclick="selectInstrument('ソプラノサックス',this)">
+    <div class="icon">🎷</div>
+    <h2>ソプラノサックス</h2>
+    <p>Soprano Saxophone</p>
   </button>
-  <button class="instrument" onclick="selectInstrument('アルトサックス',this)">
-    <div class="icon">🎷</div><h2>アルトサックス</h2><p>Alto Saxophone</p>
+
+  <button class="instrument"
+    onclick="selectInstrument('アルトサックス',this)">
+    <div class="icon">🎷</div>
+    <h2>アルトサックス</h2>
+    <p>Alto Saxophone</p>
   </button>
-  <button class="instrument" onclick="selectInstrument('テナーサックス',this)">
-    <div class="icon">🎷</div><h2>テナーサックス</h2><p>Tenor Saxophone</p>
+
+  <button class="instrument"
+    onclick="selectInstrument('テナーサックス',this)">
+    <div class="icon">🎷</div>
+    <h2>テナーサックス</h2>
+    <p>Tenor Saxophone</p>
   </button>
-  <button class="instrument" onclick="selectInstrument('バリトンサックス',this)">
-    <div class="icon">🎷</div><h2>バリトンサックス</h2><p>Baritone Saxophone</p>
+
+  <button class="instrument"
+    onclick="selectInstrument('バリトンサックス',this)">
+    <div class="icon">🎷</div>
+    <h2>バリトンサックス</h2>
+    <p>Baritone Saxophone</p>
   </button>
+
 </div>
 
 <div id="detail">
   <h2>楽器を選択してください</h2>
-  <p class="filelist">上の4種類から選ぶと、ファイル一覧が表示されます。</p>
+  <div class="filelist">
+    上の4種類から選ぶと、ファイル一覧が表示されます。
+  </div>
 </div>
+
 </main>
 
-<footer>BAND ROUND</footer>
+<footer>
+BAND ROUND
+</footer>
 
 <script>
 let currentInstrument='';
 let currentType='楽譜';
 
+const instruments={
+  soprano:'ソプラノサックス',
+  alto:'アルトサックス',
+  tenor:'テナーサックス',
+  baritone:'バリトンサックス'
+};
+
 function selectInstrument(name,button){
+
   currentInstrument=name;
-  document.querySelectorAll('.instrument').forEach(b=>b.classList.remove('active'));
-  button.classList.add('active');
+
+  document.querySelectorAll('.instrument')
+    .forEach(b=>b.classList.remove('active'));
+
+  if(button){
+    button.classList.add('active');
+  }
+
   showFiles('楽譜');
 }
 
 function showFiles(type){
+
   currentType=type;
-  const base='files/'+currentInstrument+'/';
+
   const extensions={
     '楽譜':'PDF',
     '音源':'MP3・WAV',
     '画像':'JPG・PNG'
   };
+
   document.getElementById('detail').innerHTML=`
     <h2>${currentInstrument}</h2>
+
     <div class="tabs">
       ${['楽譜','音源','画像'].map(t=>`
-        <button class="${t===type?'active':''}" onclick="showFiles('${t}')">${t}</button>
+        <button
+          class="${t===type?'active':''}"
+          onclick="showFiles('${t}')">
+          ${t}
+        </button>
       `).join('')}
     </div>
+
     <div class="filelist">
       <p>${type}の一覧</p>
       <p>対応形式：${extensions[type]}</p>
@@ -104,6 +261,29 @@ function showFiles(type){
     </div>
   `;
 }
+
+window.addEventListener('DOMContentLoaded',()=>{
+
+  const key=new URLSearchParams(location.search)
+    .get('instrument');
+
+  const name=instruments[key];
+
+  if(name){
+
+    const buttons=[
+      ...document.querySelectorAll('.instrument')
+    ];
+
+    const button=buttons.find(
+      b=>b.textContent.includes(name)
+    );
+
+    selectInstrument(name,button);
+  }
+
+});
 </script>
+
 </body>
-  </html>
+</html>
