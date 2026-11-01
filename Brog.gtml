@@ -1,1 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ブログ | BAND ROUND</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0d18;color:#fff;font-family:system-ui,sans-serif}
+header{padding:18px 22px;background:#101426;border-bottom:1px solid #ffffff20}
+.logo{font-size:22px;font-weight:900;letter-spacing:2px}
+.logo span{color:#e99acb}
+a{color:#e99acb;text-decoration:none}
+main{max-width:900px;margin:auto;padding:30px 18px}
+.back{display:inline-block;margin-bottom:30px}
+h1{font-size:34px;margin-bottom:5px}
+.sub{color:#c49abb;font-size:12px;letter-spacing:3px}
+.article{margin-top:30px;padding:22px;border:1px solid #ffffff20;border-radius:14px;background:#171b2d}
+.empty{margin-top:25px;padding:30px;text-align:center;color:#aaa;background:#171b2d;border-radius:12px}
+footer{text-align:center;padding:30px;color:#888;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">BAND <span>ROUND</span></div>
+</header>
+<main>
+  <a class="back" href="index.html">← ホームに戻る</a>
+  <h1>ブログ</h1>
+  <div class="sub">BAND ROUND BLOG</div>
 
+  <div id="articles">
+    <div class="empty">まだ記事はありません。</div>
+  </div>
+</main>
+<footer>BAND ROUND</footer>
+</body>
+</html>
