@@ -1,115 +1,190 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BAND ROUND</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b0d18;color:#fff;font-family:system-ui,sans-serif}
-header{position:sticky;top:0;z-index:10;background:#101426;padding:16px 20px;border-bottom:1px solid #ffffff20}
-.logo{font-size:23px;font-weight:900;letter-spacing:2px}こ
-.logo span{color:#e99acb}
-nav{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
-nav a{color:#ddd;text-decoration:none;font-size:13px}
-nav a:hover{color:#e99acb}
-.hero{text-align:center;padding:85px 15px;background:radial-gradient(ellipse at 50% 100%,#713b8066,transparent 60%),linear-gradient(135deg,#171a35,#11101f 60%,#321b3b)}
-.hero small{color:#e9a5d2;letter-spacing:5px}
-.hero h1{font-size:clamp(42px,9vw,76px);margin:20px 0}
-.hero p{color:#d0c9dc}
-main{max-width:1050px;margin:auto;padding:25px 18px}
-section{margin:45px 0}
-.heading{font-size:23px;border-left:4px solid #df91c5;padding-left:13px}
-.heading small{display:block;font-size:11px;color:#a99bb9;letter-spacing:2px;margin-top:5px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
-.card{display:block;padding:23px;border:1px solid #ffffff20;border-radius:14px;background:linear-gradient(145deg,#1b2037,#121525);color:white;text-decoration:none;transition:.2s}
-.card:hover{transform:translateY(-4px);border-color:#d98fc4}
-.symbol{font-size:32px}
-.card h3{margin:12px 0 7px}
-.card p{font-size:13px;color:#aaa;margin-bottom:0}
-.notice{padding:20px;border-radius:12px;background:#1a1d32;border:1px solid #ffffff18;color:#aaa;font-size:14px}
-footer{text-align:center;padding:35px 15px;color:#89849a;border-top:1px solid #ffffff18;font-size:12px}
-@media(max-width:600px){.hero{padding:65px 15px}nav{gap:12px}}
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#0b1020;
+  color:#f4f3fa;
+}
+header{
+  padding:18px 6%;
+  background:#121a30;
+  border-bottom:1px solid #293451;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:#ff9bc5;
+}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{
+  color:#d9dced;
+  text-decoration:none;
+  font-size:14px;
+}
+nav a:hover{color:#ff9bc5}
+.hero{
+  padding:85px 20px;
+  text-align:center;
+  background:linear-gradient(135deg,#20264b,#39234c,#171d38);
+}
+.hero h1{
+  font-size:clamp(38px,8vw,68px);
+  margin:0 0 15px;
+  letter-spacing:3px;
+}
+.hero p{color:#e2d9ee;font-size:17px}
+.hero .sub{font-size:13px;color:#ffafd0}
+section{
+  max-width:1050px;
+  margin:auto;
+  padding:48px 20px;
+}
+h2{
+  font-size:25px;
+  border-left:4px solid #ff8fbd;
+  padding-left:13px;
+  margin-bottom:22px;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:16px;
+}
+.card{
+  display:block;
+  padding:24px;
+  border-radius:15px;
+  background:#171f36;
+  border:1px solid #303b59;
+  color:white;
+  text-decoration:none;
+  transition:.2s;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#ff8fbd;
+  background:#202943;
+}
+.card .symbol{font-size:30px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:19px}
+.card p{margin:0;color:#aeb8d0;font-size:13px;line-height:1.7}
+.notice{
+  padding:22px;
+  background:#171f36;
+  border:1px solid #303b59;
+  border-radius:13px;
+  color:#aeb8d0;
+}
+footer{
+  text-align:center;
+  padding:28px;
+  color:#8994ad;
+  background:#080d19;
+  font-size:12px;
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">BAND <span>ROUND</span></div>
+  <div class="logo">BAND ROUND</div>
   <nav>
     <a href="index.html">ホーム</a>
     <a href="blog.html">ブログ</a>
     <a href="music.html">楽譜・音源</a>
-    <a href="#event">大会情報</a>
-    <a href="#tools">便利サイト</a>
+    <a href="#events">大会情報</a>
+    <a href="tools.html">便利ツール</a>
   </nav>
 </header>
 
 <div class="hero">
-  <small>WIND MUSIC COMMUNITY</small>
+  <p class="sub">WIND MUSIC COMMUNITY</p>
   <h1>BAND ROUND</h1>
   <p>吹奏楽を、もっと楽しく。</p>
 </div>
 
-<main>
-
 <section>
-  <h2 class="heading">ブログ<small>BLOG</small></h2>
-  <a class="card" href="blog.html">
-    <div class="symbol">📝</div>
-    <h3>ブログを見る</h3>
-    <p>活動記録・日常・吹奏楽の話題</p>
-  </a>
-</section>
-
-<section>
-  <h2 class="heading">楽譜・音源<small>SHEET MUSIC & AUDIO</small></h2>
+  <h2>楽譜・音源</h2>
   <div class="cards">
     <a class="card" href="music.html?instrument=soprano">
-      <div class="symbol">🎷</div><h3>ソプラノサックス</h3><p>Soprano Saxophone</p>
+      <div class="symbol">🎷</div>
+      <h3>ソプラノサックス</h3>
+      <p>楽譜・音源・画像を見る</p>
     </a>
+
     <a class="card" href="music.html?instrument=alto">
-      <div class="symbol">🎷</div><h3>アルトサックス</h3><p>Alto Saxophone</p>
+      <div class="symbol">🎷</div>
+      <h3>アルトサックス</h3>
+      <p>楽譜・音源・画像を見る</p>
     </a>
+
     <a class="card" href="music.html?instrument=tenor">
-      <div class="symbol">🎷</div><h3>テナーサックス</h3><p>Tenor Saxophone</p>
+      <div class="symbol">🎷</div>
+      <h3>テナーサックス</h3>
+      <p>楽譜・音源・画像を見る</p>
     </a>
+
     <a class="card" href="music.html?instrument=baritone">
-      <div class="symbol">🎷</div><h3>バリトンサックス</h3><p>Baritone Saxophone</p>
+      <div class="symbol">🎷</div>
+      <h3>バリトンサックス</h3>
+      <p>楽譜・音源・画像を見る</p>
     </a>
   </div>
 </section>
 
-<section id="event">
-  <h2 class="heading">大会情報<small>COMPETITION & EVENT</small></h2>
-  <div class="notice">大会情報はまだありません。</div>
-</section>
-
 <section>
-  <h2 class="heading">お知らせ<small>NEWS</small></h2>
+  <h2>お知らせ</h2>
   <div class="notice">お知らせはまだありません。</div>
 </section>
 
 <section>
-  <h2 class="heading">更新情報<small>UPDATES</small></h2>
+  <h2>更新情報</h2>
   <div class="notice">更新情報はまだありません。</div>
 </section>
 
-<section id="tools">
-  <h2 class="heading">吹奏楽便利サイト<small>WIND BAND TOOLS</small></h2>
+<section id="events">
+  <h2>大会情報</h2>
+  <div class="notice">大会情報はまだありません。</div>
+</section>
+
+<section>
+  <h2>吹奏楽便利ツール</h2>
   <div class="cards">
-    <a class="card" href="tools.html"><div class="symbol">🎹</div><h3>基準音・チューナー</h3><p>音程確認・基準音の再生</p></a>
-    <a class="card" href="tools.html"><div class="symbol">⏱</div><h3>メトロノーム</h3><p>テンポを設定して練習</p></a>
-    <a class="card" href="tools.html"><div class="symbol">🎼</div><h3>移調計算</h3><p>楽器ごとの音程を確認</p></a>
+    <a class="card" href="tools.html">
+      <div class="symbol">🎹</div>
+      <h3>便利ツール一覧</h3>
+      <p>チューニングや練習に使えるツール</p>
+    </a>
   </div>
 </section>
 
-</main>
+<section>
+  <h2>BAND ROUND ブログ</h2>
+  <div class="cards">
+    <a class="card" href="blog.html">
+      <div class="symbol">📝</div>
+      <h3>ブログを見る</h3>
+      <p>記事や活動記録をチェック</p>
+    </a>
+  </div>
+</section>
 
 <footer>
-BAND ROUND<br>
-吹奏楽を、もっと楽しく。<br><br>
-© BAND ROUND
+  © BAND ROUND
 </footer>
 
 </body>
